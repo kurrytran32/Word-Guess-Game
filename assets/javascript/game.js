@@ -19,6 +19,8 @@ document.onkeyup = function (event) {
     let userKey = event.key;
     //pushes user input to show in the guessArr spot
 guessArr.push(userKey);
+//put code to not register a previous keystroke
+
 
 }
 
@@ -32,12 +34,15 @@ for( i=0; i < compChc.length; i++) {
         //show letter 
         
         //you don't have to decrement guesses since this is for correct guess
+        
 
     } else {
         guessLft--;
         guessArr.push(userKey);
+        //put in code so same key cannot be entered again
     }
 }
+
 //what to do if you run out of guesses
 //should be outside scope of function so it runs when you run out of guesses
 if(guessLft === 0){
