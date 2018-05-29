@@ -12,10 +12,10 @@ compChc.toString();
 // needed to show length of word to user in blanks by showing array length, underScores push into this for correct guesses
 let wrdLengthArr = [];
 //array to show player input for incorrect guess
-let guessArr = [];
+
 // guessArr.toString();
 //array for showing the right word
-let realWord = [];
+
 console.log(compChc);
 
 
@@ -28,10 +28,12 @@ let wrdLength = function () {
 };
 console.log(wrdLength());
 
+
 //getting user input through event
 document.onkeyup = function (event) {
     let userKey = event.key;
-
+    let realWord = [];
+    let guessArr = [];
     console.log(compChc.indexOf(userKey));
 
     //comparing userpressed key to compChc which is an array, checking to see if userKey is in a position within compChc by asking if userKey has a value higher than -1, meaning it has a position in the array (0,1,2,3)
@@ -48,61 +50,70 @@ document.onkeyup = function (event) {
         console.log(wrdLengthArr);
 
         for (let i = 0; i < compChc.length; i++) {
-            if (compChc[i] !== 1) {
+            if (compChc[i] === userKey) {
                 wrdLengthArr[compChc.indexOf(userKey, i)] = userKey;
                 console.log(wrdLengthArr);
             }
 
-            //add win condition of if you fill out the word in here because it relates to guessing the correct letter, using .join will bring the string characters in the array together to do a check 
-            if (guessArr.join('') == compChc) {
-                // increment wins
-                wins++;
-                //alerting that they solved the word
-                alert("You solved it!");
-            }
+        }
+        //add win condition of if you fill out the word in here because it relates to guessing the correct letter, using .join will bring the string characters in the array together to do a check 
+        if (wrdLengthArr.join('') == compChc) {
+            // increment wins
+            wins++;
+            //alerting that they solved the word
+            alert("You solved it!");
+            guessLft = 15;
+            guessArr.splice(0, guessArr.length);
 
         }
+        //if userKey is already in realWord then do nothing
+        if (realWord.indexOf(userKey) > -1);
     }
+
+
+
+
+
     if (compChc.indexOf(userKey) === -1) {
         //decrememnt guesses later
         guessLft--;
         //push guesses into guessArr
         guessArr.push(userKey);
+        console.log(guessArr);
 
-        //adding the if statement for when they run out of guesses and lose a round
-        if (guessLft === 0) {
-            loss++;
-            alert("Better luck next time...")
-        }
+        //if userKey is already in guessArr then do nothing
+        if (guessArr.indexOf(userKey) > -1);
+
     }
 
 
-};
-    //pushes user input to show in the guessArr spot
 
-    //put code to not register a previous keystroke
+
+    //adding the if statement for when they run out of guesses and lose a round
+    if (guessLft === 0) {
+        loss++;
+        alert("Better luck next time...");
+        guessLft = 15;
+        guessArr.splice(0, guessArr.length);
+    }
+
+    let html =
+        "<p>" + wrdLengthArr + "</p>" +
+        "<p>Letters Guessed: " + guessArr + "</p>" +
+        "<p>Right Letters: " + realWord + "</p>" +
+        "<p>Guesses Left: " + guessLft + "</p>" +
+        "<p>Wins: " + wins + "</p>" +
+        "<p>Losses: " + loss + "</p>";
+
+    document.querySelector("#game").innerHTML = html;
+
+};
+
 
 
 
 
 //Coding out conditions
-
-//checking if userKey is within compChc
-//for loop for guessing the word
-// for( i=0; i < compChc.length; i++) {
-//     //checking input to word compChc by cycling each character of the index of compChc
-    // if(userKey === str.charAt[i]) {
-    //     //show letter 
-    //     userKey.push(wrdLengthArr)
-        //you don't have to decrement guesses since this is for correct guess
-
-
-//     } else {
-//         guessLft--;
-//         guessArr.push(userKey);
-//         //put in code so same key cannot be entered again
-//     }
-// }
 
 // //what to do if you run out of guesses
 // //should be outside scope of function so it runs when you run out of guesses
