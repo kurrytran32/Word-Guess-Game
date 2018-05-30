@@ -21,12 +21,20 @@ console.log(compChc);
 
 //creating a function to make underscores based on compChc length
 let wrdLength = function () {
+    
     for (let i = 0; i < compChc.length; i++) {
         wrdLengthArr.push('_');
     }
     return wrdLengthArr;
 };
 console.log(wrdLength());
+
+//building functions
+
+//word generating function
+
+
+
 
 
 //getting user input through event
@@ -64,6 +72,8 @@ document.onkeyup = function (event) {
             alert("You solved it!");
             guessLft = 15;
             guessArr.splice(0, guessArr.length);
+            realWord.splice(0, realWord.length);
+            wrdLengthArr.splice(0, wrdLengthArr.length);
 
         }
         //if userKey is already in realWord then do nothing
@@ -95,6 +105,8 @@ document.onkeyup = function (event) {
         alert("Better luck next time...");
         guessLft = 15;
         guessArr.splice(0, guessArr.length);
+        realWord.splice(0, realWord.length);
+        wrdLengthArr.splice(0, wrdLengthArr.length);
     }
 
     let html =
