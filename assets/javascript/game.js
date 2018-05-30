@@ -1,144 +1,88 @@
-//global variables 
-let wins = 0;
-let loss = 0;
-let guessLft = 15;
-//word bank array
-let wrdBank = ["gear", "seed", "north", "haunt", "mother", "shy"];
-//choosing random word from wrdBank put into onkeyup function
-//compChc becomes another array
-let rndWord = Math.floor(Math.random() * wrdBank.length);
-let compChc = wrdBank[rndWord];
-compChc.toString();
-// needed to show length of word to user in blanks by showing array length, underScores push into this for correct guesses
-let wrdLengthArr = [];
-//array to show player input for incorrect guess
 
-// guessArr.toString();
-//array for showing the right word
-
-console.log(compChc);
+let game = {
+    wins: 0,
+    loss: 0,
+    guessLft: 15,
+    wrdBank : ["gear", "seed", "north", "haunt", "mother", "shy", "ball", "television"],
+    wrdLengthArr: [],
+    realWord: [],
+    guessArr: [],
+    ansR: [],
+    wordGenerator: function () {
+        rndWord = this.wrdBank[Math.floor(Math.random() * this.wrdBank.length)];
+        console.log(rndWord);
+        this.ansR.push(rndWord);
+        return rndWord;
+    },
 
 
-//creating a function to make underscores based on compChc length
-let wrdLength = function () {
-    
-    for (let i = 0; i < compChc.length; i++) {
-        wrdLengthArr.push('_');
+    wordScore: function () {
+        for (let i = 0; i < this.ansR[0].length; i++) {
+            this.wrdLengthArr.push('_');
+        }
+        console.log(this.wrdLengthArr);
+    },
+
+    resetThing: function () {
+        this.guessLft = 15;
+        this.guessArr.splice(0, this.guessArr.length);
+        this.realWord.splice(0, this.realWord.length);
+        this.wrdLengthArr.splice(0, this.wrdLengthArr.length);
+        this.ansR.splice(0, this.ansR.length);
+        this.wordGenerator();
+        this.wordScore();
     }
-    return wrdLengthArr;
 };
-console.log(wrdLength());
+window.onload = function () {
+    game.wordGenerator();
+    game.wordScore();
+    gameStats();
+}
 
-//building functions
-
-//word generating function
-
-
-
-
-
-//getting user input through event
-document.onkeyup = function (event) {
+document.onkeyup = function () {
     let userKey = event.key;
-    let realWord = [];
-    let guessArr = [];
-    console.log(compChc.indexOf(userKey));
 
-    //comparing userpressed key to compChc which is an array, checking to see if userKey is in a position within compChc by asking if userKey has a value higher than -1, meaning it has a position in the array (0,1,2,3)
-    if (compChc.indexOf(userKey) > -1) {
-        //testing function
-        console.log(true);
-        //push correct key to realWord array
-        realWord.push(userKey);
-        console.log(realWord);
-
-
-        //replacing the underscores with right letter
-        wrdLengthArr[compChc.indexOf(userKey)] = userKey;
-        console.log(wrdLengthArr);
-
-        for (let i = 0; i < compChc.length; i++) {
-            if (compChc[i] === userKey) {
-                wrdLengthArr[compChc.indexOf(userKey, i)] = userKey;
-                console.log(wrdLengthArr);
+    if (game.guessArr.indexOf(userKey) <= -1 &&game.realWord.indexOf(userKey) <= -1 && game.ansR.indexOf(userKey)) {
+            
+        if (game.ansR[0].indexOf(userKey) > -1) {
+            game.realWord.push(userKey);
+            game.wrdLengthArr[game.ansR[0].indexOf(userKey)] = userKey;
+            console.log(game.wrdLengthArr);
+            for (let i = 0; i < game.ansR[0].length; i++) {
+                if (game.ansR[0][i] === userKey) {
+                    game.wrdLengthArr[game.ansR[0].indexOf(userKey, i)] = userKey;
+                }
             }
+            if (game.guessArr.indexOf(userKey) > -1);
 
         }
-        //add win condition of if you fill out the word in here because it relates to guessing the correct letter, using .join will bring the string characters in the array together to do a check 
-        if (wrdLengthArr.join('') == compChc) {
-            // increment wins
-            wins++;
-            //alerting that they solved the word
+        if (game.ansR[0].indexOf(userKey) === -1) {
+            game.guessLft--;
+            game.guessArr.push(userKey);
+
+        }
+        if (game.wrdLengthArr.join('') == game.ansR[0]) {
+            game.wins++;
             alert("You solved it!");
-            guessLft = 15;
-            guessArr.splice(0, guessArr.length);
-            realWord.splice(0, realWord.length);
-            wrdLengthArr.splice(0, wrdLengthArr.length);
-
+            game.resetThing();
         }
-        //if userKey is already in realWord then do nothing
-        if (realWord.indexOf(userKey) > -1);
+        if (game.guessLft === 0) {
+            game.loss++;
+            alert("Better Luck Next Time...");
+            game.resetThing();
+        }
     }
+    gameStats();
+}
 
-
-
-
-
-    if (compChc.indexOf(userKey) === -1) {
-        //decrememnt guesses later
-        guessLft--;
-        //push guesses into guessArr
-        guessArr.push(userKey);
-        console.log(guessArr);
-
-        //if userKey is already in guessArr then do nothing
-        if (guessArr.indexOf(userKey) > -1);
-
-    }
-
-
-
-
-    //adding the if statement for when they run out of guesses and lose a round
-    if (guessLft === 0) {
-        loss++;
-        alert("Better luck next time...");
-        guessLft = 15;
-        guessArr.splice(0, guessArr.length);
-        realWord.splice(0, realWord.length);
-        wrdLengthArr.splice(0, wrdLengthArr.length);
-    }
-
+function gameStats() {
     let html =
-        "<p>" + wrdLengthArr + "</p>" +
-        "<p>Letters Guessed: " + guessArr + "</p>" +
-        "<p>Right Letters: " + realWord + "</p>" +
-        "<p>Guesses Left: " + guessLft + "</p>" +
-        "<p>Wins: " + wins + "</p>" +
-        "<p>Losses: " + loss + "</p>";
+        "<p>" + game.wrdLengthArr + "</p>" +
+        "<p>Letters Guessed: " + game.guessArr + "</p>" +
+        "<p>Right Letters: " + game.realWord + "</p>" +
+        "<p>Guesses Left: " + game.guessLft + "</p>" +
+        "<p>Wins: " + game.wins + "</p>" +
+        "<p>Losses: " + game.loss + "</p>";
 
     document.querySelector("#game").innerHTML = html;
-
 };
-
-
-
-
-
-//Coding out conditions
-
-// //what to do if you run out of guesses
-// //should be outside scope of function so it runs when you run out of guesses
-// if(guessLft === 0){
-//     loss++;
-//     //resets guesses and clears out displayed input
-//     guessLft = 15;
-//     guessArr.splice(0, guessArr.length);
-//     //chooses another random word for game
-//     //not too sure adding and commenting out for now
-//     // let compChc = wrdBank[Math.floor(Math.random() * wrdBank.length)];
-// }
-
-
-
-//remember to check for double letter situation
