@@ -1,66 +1,79 @@
+
 let game = {
-    wins : 0,
-    loss : 0,
-    guessLft : 15,
+    wins: 0,
+    loss: 0,
+    guessLft: 15,
     wrdBank : ["gear", "seed", "north", "haunt", "mother", "shy"],
-    wrdLengthArr : [],
-    realWord : [],
-    guessArr : [],
-    
-    wordGenerator: function() {
-        wrdBank = ["gear", "seed", "north", "haunt", "mother", "shy"],
-        rndWord = Math.floor(Math.random() * wrdBank.length);
-        compChc= wrdBank[rndWord],
-        wrdLengthArr= [];
-        console.log(compChc);
-        for (let i = 0; i < compChc.length; i++) {
+    wrdLengthArr: [],
+    realWord: [],
+    guessArr: [],
+    ansR: [],
+    wordGenerator: function () {
+        rndWord = this.wrdBank[Math.floor(Math.random() * this.wrdBank.length)];
+        console.log(rndWord);
+        this.ansR.push(rndWord);
+        return rndWord;
+    },
+
+
+    wordScore: function () {
+        for (let i = 0; i < this.ansR[0].length; i++) {
             this.wrdLengthArr.push('_');
         }
-        return wrdLengthArr;
-        return;
+        console.log(this.wrdLengthArr);
     },
 
-    ltrPush: function() {
-        realWord.push(userKey);
-        this.wrdLengthArr[this.compChc.indexOf(userKey)] = userKey;
-        if (this.realWord.indexOf(userKey) > -1);
-        
-    },
-
-    ltrPush2: function() {
-        //decrememnt guesses
-        guessLft--;
-        this.guessArr.push(userKey);
-        if (this.guessArr.indexOf(userKey) > -1);
-    },
-
-    addWin: function() {
-        // increment wins
-        wins++;
-        //alerting that they solved the word
-        alert("You solved it!");
-        guessLft = 15;
-        this.guessArr.splice(0, guessArr.length);
-        this.wrdLengthArr.splice(0, this.wrdLengthArr.length);
-    },
-
-    addLoss: function() {
-        loss++;
-        alert("Better luck next time...");
-        guessLft = 15;
+    resetThing: function () {
+        this.guessLft = 15;
         this.guessArr.splice(0, this.guessArr.length);
-        this.wrdLengthArr.splice(0, this.wrdLengthArr.length);
         this.realWord.splice(0, this.realWord.length);
-        
-    },
-    
-
-    
+        this.wrdLengthArr.splice(0, this.wrdLengthArr.length);
+        this.ansR.splice(0, this.ansR.length);
+        this.wordGenerator();
+        this.wordScore();
+    }
 };
+window.onload = function () {
+    game.wordGenerator();
+    game.wordScore();
+    gameStats();
+}
 
+document.onkeyup = function () {
+    let userKey = event.key;
 
+    if (game.guessArr.indexOf(userKey) <= -1 &&game.realWord.indexOf(userKey) <= -1 && game.ansR.indexOf(userKey)) {
+            
+        if (game.ansR[0].indexOf(userKey) > -1) {
+            game.realWord.push(userKey);
+            game.wrdLengthArr[game.ansR[0].indexOf(userKey)] = userKey;
+            console.log(game.wrdLengthArr);
+            for (let i = 0; i < game.ansR[0].length; i++) {
+                if (game.ansR[0][i] === userKey) {
+                    game.wrdLengthArr[game.ansR[0].indexOf(userKey, i)] = userKey;
+                }
+            }
+            if (game.guessArr.indexOf(userKey) > -1);
 
-document.onkeyup = handleKeyUp;
+        }
+        if (game.ansR[0].indexOf(userKey) === -1) {
+            game.guessLft--;
+            game.guessArr.push(userKey);
+
+        }
+        if (game.wrdLengthArr.join('') == game.ansR[0]) {
+            game.wins++;
+            alert("You solved it!");
+            game.resetThing();
+        }
+        if (game.guessLft === 0) {
+            game.loss++;
+            alert("Better Luck Next Time...");
+            game.resetThing();
+        }
+    }
+    gameStats();
+}
 
 function gameStats() {
     let html =
@@ -73,25 +86,3 @@ function gameStats() {
 
     document.querySelector("#game").innerHTML = html;
 };
-
-function handleKeyUp(event) {
-    let userKey = event.key;
-    gameStats();
-   
-    if (game.compChc.indexOf(userKey) > -1) {
-        game.ltrPush(userKey);
-    };
-    if (game.wrdLengthArr.join('') == game.compChc) {
-        game.addWin(userKey);
-    };
-    if (game.compChc.indexOf(userKey) === -1) {
-        game.ltrPush2(userKey);
-    };
-    if (guessLft === 0) {
-        game.addLoss(userKey);
-    }
-    ;
-
-};
-game.wordGenerator();
-gameStats();
