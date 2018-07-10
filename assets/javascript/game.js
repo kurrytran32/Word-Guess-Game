@@ -42,7 +42,7 @@ window.onload = function () {
 document.onkeyup = function () {
     let userKey = event.key;
 
-    if (game.guessArr.indexOf(userKey) <= -1 &&game.realWord.indexOf(userKey) <= -1 && game.ansR.indexOf(userKey)) {
+    if (game.guessArr.indexOf(userKey) <= -1 && game.realWord.indexOf(userKey) <= -1 && game.ansR.indexOf(userKey)) {
             
         if (game.ansR[0].indexOf(userKey) > -1) {
             game.realWord.push(userKey);
